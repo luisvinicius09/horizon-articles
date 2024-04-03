@@ -1,0 +1,18 @@
+services:
+  horizon-db:
+    image: bitnami/postgresql:latest
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+
+    environment:
+      POSTGRESQL_DATABASE: horizon-db
+      POSTGRESQL_USERNAME: horizon-pg
+      POSTGRESQL_PASSWORD: horizon-pw
+
+    volumes:
+      - db-data:/bitnami/postgresql
+
+
+volumes:
+  db-data:
