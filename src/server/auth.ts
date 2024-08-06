@@ -5,6 +5,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
@@ -47,7 +48,39 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   adapter: DrizzleAdapter(db, createTable) as Adapter,
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60,
+  },
+  secret: env.NEXTAUTH_SECRET,
   providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // const user = await prisma.user.findUnique({
+        //   where: { username: credentials?.email },
+        // });
+
+        // if (!user) {
+        //   return null
+        // }
+
+        // const matchingPassword =
+        //   user.password &&
+        //   credentials?.password &&
+        //   (await bcrypt.compare(credentials.password, user.password));
+
+        // if (!matchingPassword)
+        //   throw new Error("Incorrect Username or Password");
+        // return user;
+
+        return null;
+      },
+    }),
     /**
      * ...add more providers here.
      *
